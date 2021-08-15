@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 read -p "Input number:" num
 level=0;
 if [ $num -ge 90 ] ;then 
@@ -22,4 +24,3 @@ case $level in
 *)    
 	echo "low level";;
 esac
-	

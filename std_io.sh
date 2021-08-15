@@ -41,10 +41,47 @@ cat std_io.txt
 #因为如果不加&符号的话，2>1这样的写法，1会被认为是一个文件名。
 #(ls && ls+) >/dev/null 2>&1
 #(ls && ls+) 2>/dev/null 1>&2
+#最简单的写法 表示将stdout和stderr都进行重定向
+#(ls && ls+) &>/dev/null
+
 ########################################################
 # 3.重定向到文件
+
 #ls > stdout.txt
 #ls+ 2> stderr.txt
 #或者可以连起来写
-(ls && ls+) >stdout.txt 2>stderr.txt
+#(ls && ls+) >stdout.txt 2>stderr.txt
+
+#如果想输入到同一个文件
+#(ls && ls+) >std_io.txt 2>>std_io.txt
+#(ls && ls+) >std_io.txt 2>&1
+
+#这个写法是不对的1.6节，但是书上有这个写法不知道为什么
+#这种写法对于单个命令可能是有效的，对于这种组合命令就出问题了
+#测试发现，单个命令也是没有效果的
+#(ls && ls+) 2>&1 >std_io.txt
+
+#也是错误的，错误内容还是在屏幕输出了
+#ls+  2>&1 >std_io.txt
+
+#下面的例子也是不对的，证明书上的例子确实是不对的
+# touch a1 a2 a3
+# echo "a1">a1
+# echo "a2">a2
+# echo "a3">a3
+# chmod a1 000
+# cat a* 2>&1 >std_io.txt
+
+#更简单的写法
+#(ls && ls+) &> std_io.txt
+
+#####################################################
+#4.同时输出到stdout和文件
+
+#如果有这样一个需求，同时输出到stdout和文件，
+#那么重定向是无法完成这个功能的
+#可以借助tee这个命令，cat -n表示添加行号，通过管道进行多道程序加工
+# stderr的内容并不会写入，因为tee命令只能从stdin读取内容
+#cat a* | tee a.out | cat -n
+
 
